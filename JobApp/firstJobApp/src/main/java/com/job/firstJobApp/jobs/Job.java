@@ -1,7 +1,15 @@
 package com.job.firstJobApp.jobs;
 
+import com.job.firstJobApp.companies.Company;
+
+import jakarta.persistence.*;
+
+@Entity
+//@Table(name="job_table") to provide different name to the table.
 public class Job {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
 	private String description;
@@ -9,6 +17,15 @@ public class Job {
 	private String maxSalary;
 	private String location;
 	private String companyName;
+	
+	@ManyToOne
+	private Company company;
+	
+	/*
+	 * Default constructor is required by the JPA as it won't be able to instantiate the object of the entity class.
+	 */	
+	public Job() {
+	}
 	
 	public Job(Long id, String title, String description, String minSalary, String maxSalary, String location, String companyName) {
 		
@@ -76,6 +93,14 @@ public class Job {
 
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 	
 	
