@@ -2,11 +2,15 @@ package com.job.firstJobApp.companies;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.job.firstJobApp.jobs.Job;
+import com.job.firstJobApp.reviews.Reviews;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Company {
@@ -15,23 +19,22 @@ public class Company {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String employeeSize;
 	private String aboutCompany;
-	private String estDate;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "company")
 	private List<Job> jobs;
 	
+	@OneToMany(mappedBy = "company")
+	private List<Reviews> reviews;
+	
 	public Company() {
 	}
 
-	public Company(Long id, String name, String employeeSize, String aboutCompany, String estDate) {
+	public Company(Long id, String name, String aboutCompany) {
 		this.id = id;
 		this.name = name;
-		this.employeeSize = employeeSize;
 		this.aboutCompany = aboutCompany;
-		this.estDate = estDate;
 	}
 
 	public Long getId() {
@@ -50,14 +53,6 @@ public class Company {
 		this.name = name;
 	}
 
-	public String getEmployeeSize() {
-		return employeeSize;
-	}
-
-	public void setEmployeeSize(String employeeSize) {
-		this.employeeSize = employeeSize;
-	}
-
 	public String getAboutCompany() {
 		return aboutCompany;
 	}
@@ -66,20 +61,20 @@ public class Company {
 		this.aboutCompany = aboutCompany;
 	}
 
-	public String getEstDate() {
-		return estDate;
-	}
-
-	public void setEstDate(String estDate) {
-		this.estDate = estDate;
-	}
-
 	public List<Job> getJobs() {
 		return jobs;
 	}
 
 	public void setJobs(List<Job> jobs) {
 		this.jobs = jobs;
+	}
+
+	public List<Reviews> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Reviews> reviews) {
+		this.reviews = reviews;
 	}
 	
 	

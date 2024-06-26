@@ -16,7 +16,6 @@ public class Job {
 	private String minSalary;
 	private String maxSalary;
 	private String location;
-	private String companyName;
 	
 	@ManyToOne
 	private Company company;
@@ -27,7 +26,7 @@ public class Job {
 	public Job() {
 	}
 	
-	public Job(Long id, String title, String description, String minSalary, String maxSalary, String location, String companyName) {
+	public Job(Long id, String title, String description, String minSalary, String maxSalary, String location) {
 		
 		this.id = id;
 		this.title = title;
@@ -35,7 +34,6 @@ public class Job {
 		this.minSalary = minSalary;
 		this.maxSalary = maxSalary;
 		this.location = location;
-		this.companyName = companyName;
 		
 	}
 
@@ -85,14 +83,6 @@ public class Job {
 
 	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
 	}
 
 	public Company getCompany() {

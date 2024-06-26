@@ -40,14 +40,13 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-	public boolean deleteCompany(Long id) {
+	public boolean deleteCompanyById(Long id) {
 		// TODO Auto-generated method stub
-		try {
+		if(companyRepository.existsById(id)) {
 			companyRepository.deleteById(id);
 			return true;
-		} catch (Exception e) {
-			return false;
 		}
+			return false;
 		
 	}
 
@@ -58,9 +57,7 @@ public class CompanyServiceImpl implements CompanyService {
 		if(companyOptional.isPresent()) {
 			Company company = companyOptional.get();
 			company.setAboutCompany(updatedCompany.getAboutCompany());
-			company.setEmployeeSize(updatedCompany.getEmployeeSize());
 			company.setName(updatedCompany.getName());
-			company.setEstDate(updatedCompany.getEstDate());
 			company.setJobs(updatedCompany.getJobs());
 			
 			companyRepository.save(company);
