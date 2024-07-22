@@ -2,15 +2,15 @@ package com.microservices.jobms.jobs;
 
 import java.util.List;
 
-import com.microservices.jobms.jobs.dto.JobWithCompanyDTO;
+import com.microservices.jobms.jobs.dto.JobDTO;
 
 public interface JobService {
 	
-	List<JobWithCompanyDTO> findAll();
+	List<JobDTO> findAll();
 	
 	void createJob(Job job);
 
-	Job findJobById(Long id);
+	JobDTO findJobById(Long id);
 
 	boolean deleteJob(Long id);
 
