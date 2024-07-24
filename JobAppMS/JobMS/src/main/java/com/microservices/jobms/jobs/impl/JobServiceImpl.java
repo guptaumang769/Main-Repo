@@ -5,15 +5,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.microservices.jobms.jobs.Job;
 import com.microservices.jobms.jobs.JobRepository;
 import com.microservices.jobms.jobs.JobService;
+import com.microservices.jobms.jobs.clients.CompanyClient;
+import com.microservices.jobms.jobs.clients.ReviewClient;
 import com.microservices.jobms.jobs.dto.JobDTO;
 import com.microservices.jobms.jobs.external.Company;
 import com.microservices.jobms.jobs.external.Review;
@@ -28,9 +27,15 @@ public class JobServiceImpl implements JobService {
 	
 	@Autowired
 	RestTemplate restTemplate;
+	
+	private CompanyClient companyCLient;
+	
+	private ReviewClient reviewClient;
 
-	public JobServiceImpl(JobRepository jobsRepository) {
+	public JobServiceImpl(JobRepository jobsRepository, CompanyClient companyCLient, ReviewClient reviewClient) {
 		this.jobsRepository = jobsRepository;
+		this.companyCLient = companyCLient;
+		this.reviewClient = reviewClient;
 	}
 
 	@Override
@@ -43,14 +48,8 @@ public class JobServiceImpl implements JobService {
 	
 	public JobDTO convertToDTO(Job job) {
 		
-			Company company = restTemplate.getForObject("http://COMPANY-SERVICE:8081/companies/" + job.getCompanyId(),
-					Company.class);
-			ResponseEntity<List<Review>> reviewResponse = restTemplate.exchange("http://REVIEW-SERVICE:8083/reviews?companyId=" + job.getCompanyId(), 
-					HttpMethod.GET,
-					null,
-					new ParameterizedTypeReference<List<Review>>() {
-					}); 
-			List<Review> reviews = reviewResponse.getBody();
+			Company company = companyCLient.getCompany(job.getCompanyId());
+			List<Review> reviews = reviewClient.getReviews(job.getCompanyId());
 			
 			JobDTO jobDTO = JobMapper.mapToJobWithCOmpanyDTO(job, company, reviews);
 
