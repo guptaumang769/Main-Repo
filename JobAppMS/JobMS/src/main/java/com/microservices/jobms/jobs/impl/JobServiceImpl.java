@@ -1,5 +1,6 @@
 package com.microservices.jobms.jobs.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,12 +19,18 @@ import com.microservices.jobms.jobs.external.Company;
 import com.microservices.jobms.jobs.external.Review;
 import com.microservices.jobms.jobs.mapper.JobMapper;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
+
 @Service
 public class JobServiceImpl implements JobService {
 	
 	//private List<Job> jobs = new ArrayList<>();
 	JobRepository jobsRepository;
 	private Long nextId = 1L;
+	
+	int attempt = 0;
 	
 	@Autowired
 	RestTemplate restTemplate;
@@ -39,11 +46,26 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
+	/*
+	 * @CircuitBreaker(name = "companyBreaker", fallbackMethod =
+	 * "companyBreakerFallback")
+	 */
+	/*
+	 * @Retry(name = "companyBreaker", fallbackMethod = "companyBreakerFallback")
+	 */
+	@RateLimiter(name = "companyBreaker")
 	public List<JobDTO> findAll() {
 		// TODO Auto-generated method stub
+		System.out.println("Attempt: "+ ++attempt);
 		List<Job> jobs = jobsRepository.findAll();
 		
 		return jobs.stream().map(this::convertToDTO).collect(Collectors.toList());
+	}
+	
+	public List<String> companyBreakerFallback(Exception e) {
+		List<String> list = new ArrayList<>();
+		list.add("Dummy");
+		return list;
 	}
 	
 	public JobDTO convertToDTO(Job job) {
