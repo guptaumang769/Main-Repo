@@ -2,6 +2,8 @@ package com.microservices.companyms.companies;
 
 import java.util.List;
 
+import com.microservices.companyms.companies.dto.ReviewMessage;
+
 public interface CompanyService {
 	
 	List<Company> findAll();
@@ -13,5 +15,7 @@ public interface CompanyService {
 	boolean deleteCompanyById(Long id);
 
 	boolean updateCompany(Long id, Company updatedCompany);
+
+	public void updateCompanyRating(ReviewMessage reviewMessage);
 
 }
